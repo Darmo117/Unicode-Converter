@@ -1,4 +1,4 @@
-package net.darmo.converter;
+package net.darmo_creations.unicode_converter.converter;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -71,7 +71,7 @@ public class ConverterFrame extends JFrame implements KeyListener, ActionListene
         langItems.put("en", new JRadioButtonMenuItem("English"));
         langItems.get("en").setActionCommand("lang en");
         langItems.get("en").setSelected(locale.getLanguage().equals("en"));
-        langItems.put("fr", new JRadioButtonMenuItem("français"));
+        langItems.put("fr", new JRadioButtonMenuItem("franï¿½ais"));
         langItems.get("fr").setActionCommand("lang fr");
         langItems.get("fr").setSelected(locale.getLanguage().equals("fr"));
         

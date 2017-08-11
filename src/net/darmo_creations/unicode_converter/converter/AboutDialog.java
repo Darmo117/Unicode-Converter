@@ -1,4 +1,4 @@
-package net.darmo.converter;
+package net.darmo_creations.unicode_converter.converter;
 
 import java.awt.BorderLayout;
 import java.awt.Desktop;

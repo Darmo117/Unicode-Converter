@@ -1,4 +1,4 @@
-package net.darmo.converter;
+package net.darmo_creations.unicode_converter.converter;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;

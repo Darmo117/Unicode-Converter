@@ -18,10 +18,12 @@
  */
 package net.darmo_creations.unicode_converter;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
-import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -51,19 +53,18 @@ public class MainFrame extends JFrame {
   public MainFrame(Language language) {
     setResizable(false);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setIconImage(new ImageIcon(getClass().getResource("/icons/icon.png")).getImage());
+    setTitle(I18n.getLocalizedString("dialog.main_frame.title") + " (" + Start.CURRENT_VERSION + ")");
+    setIconImage(new ImageIcon(MainFrame.class.getResource("/assets/icons/icon.png")).getImage());
 
     MainController controller = new MainController(this, language);
+
     this.aboutDialog = new AboutDialog(this);
 
     setJMenuBar(getMenuBar(language, controller));
 
-    JLabel characterLbl = new JLabel(I18n.getLocalizedString("label.character.text"));
-    JLabel decimalCodeLbl = new JLabel(I18n.getLocalizedString("label.decimal_code.text"));
-    JLabel hexaCodeLbl = new JLabel(I18n.getLocalizedString("label.hexadecimal_code.text"));
-    this.characterFld = new JTextField();
-    this.decimalCodeFld = new JTextField();
-    this.hexaCodeFld = new JTextField();
+    this.characterFld = new JTextField(10);
+    this.decimalCodeFld = new JTextField(10);
+    this.hexaCodeFld = new JTextField(10);
 
     this.characterFld.setName(CHARACTER_FLD_NAME);
     this.characterFld.addKeyListener(controller);
@@ -72,33 +73,45 @@ public class MainFrame extends JFrame {
     this.hexaCodeFld.setName(HEXA_CODE_FLD_NAME);
     this.hexaCodeFld.addKeyListener(controller);
 
-    GroupLayout labelsPanelLayout = new GroupLayout(this.labelsPanel);
+    setLayout(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
 
-    this.labelsPanel.setLayout(labelsPanelLayout);
-    labelsPanelLayout.setAutoCreateGaps(true);
-    labelsPanelLayout.setAutoCreateContainerGaps(true);
-    labelsPanelLayout.setHorizontalGroup(
-        labelsPanelLayout.createParallelGroup().addComponent(this.charLbl).addComponent(this.decLbl).addComponent(this.hexLbl));
-    labelsPanelLayout.setVerticalGroup(
-        labelsPanelLayout.createSequentialGroup().addComponent(this.charLbl).addComponent(this.decLbl).addComponent(this.hexLbl));
+    gbc.anchor = GridBagConstraints.BASELINE_LEADING;
+    gbc.insets.left = 10;
+    add(new JLabel(I18n.getLocalizedString("label.character.text")), gbc);
 
-    GroupLayout fieldsPanelLayout = new GroupLayout(this.fieldsPanel);
+    gbc.gridx = 1;
+    gbc.gridwidth = GridBagConstraints.REMAINDER;
+    gbc.anchor = GridBagConstraints.BASELINE;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.insets = new Insets(5, 10, 0, 10);
+    add(this.characterFld, gbc);
 
-    this.fieldsPanel.setLayout(fieldsPanelLayout);
-    fieldsPanelLayout.setAutoCreateGaps(true);
-    fieldsPanelLayout.setAutoCreateContainerGaps(true);
-    fieldsPanelLayout.setHorizontalGroup(
-        fieldsPanelLayout.createParallelGroup().addComponent(this.characterFld).addComponent(this.decimalCodeFld).addComponent(
-            this.hexaCodeFld));
-    fieldsPanelLayout.setVerticalGroup(
-        fieldsPanelLayout.createSequentialGroup().addComponent(this.characterFld).addComponent(this.decimalCodeFld).addComponent(
-            this.hexaCodeFld));
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    gbc.gridwidth = 1;
+    gbc.anchor = GridBagConstraints.BASELINE_LEADING;
+    gbc.insets.left = 10;
+    add(new JLabel(I18n.getLocalizedString("label.decimal_code.text")), gbc);
 
-    GroupLayout layout = new GroupLayout(getContentPane());
+    gbc.gridx = 1;
+    gbc.gridwidth = GridBagConstraints.REMAINDER;
+    gbc.anchor = GridBagConstraints.BASELINE;
+    gbc.insets = new Insets(5, 10, 0, 10);
+    add(this.decimalCodeFld, gbc);
 
-    getContentPane().setLayout(layout);
-    layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(this.labelsPanel).addComponent(this.fieldsPanel));
-    layout.setVerticalGroup(layout.createParallelGroup().addComponent(this.labelsPanel).addComponent(this.fieldsPanel));
+    gbc.gridx = 0;
+    gbc.gridy = 2;
+    gbc.gridwidth = 1;
+    gbc.anchor = GridBagConstraints.BASELINE_LEADING;
+    gbc.insets.left = 10;
+    add(new JLabel(I18n.getLocalizedString("label.hexadecimal_code.text")), gbc);
+
+    gbc.gridx = 1;
+    gbc.gridwidth = GridBagConstraints.REMAINDER;
+    gbc.anchor = GridBagConstraints.BASELINE;
+    gbc.insets = new Insets(5, 10, 5, 10);
+    add(this.hexaCodeFld, gbc);
 
     pack();
     setLocationRelativeTo(null);
@@ -106,6 +119,7 @@ public class MainFrame extends JFrame {
 
   private JMenuBar getMenuBar(Language language, ActionListener actionListener) {
     JMenuBar menuBar = new JMenuBar();
+
     JMenu langMenu = new JMenu(I18n.getLocalizedString("menu.lang.text"));
     langMenu.setMnemonic(I18n.getLocalizedMnemonic("menu.lang"));
     JMenuItem i;
@@ -117,11 +131,14 @@ public class MainFrame extends JFrame {
       i.setSelected(l == language);
       group.add(i);
     }
+    menuBar.add(langMenu);
 
     JMenu helpMenu = new JMenu(I18n.getLocalizedString("menu.help.text"));
     helpMenu.setMnemonic(I18n.getLocalizedMnemonic("menu.help"));
     helpMenu.add(i = new JMenuItem(I18n.getLocalizedString("item.about.text")));
     i.addActionListener(actionListener);
+    i.setActionCommand("about");
+    menuBar.add(helpMenu);
 
     return menuBar;
   }

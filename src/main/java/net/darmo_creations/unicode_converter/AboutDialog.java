@@ -21,159 +21,100 @@ package net.darmo_creations.unicode_converter;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.StringJoiner;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRootPane;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
+import javax.swing.text.Document;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
+import net.darmo_creations.utils.I18n;
+import net.darmo_creations.utils.swing.ImageLabel;
 import net.darmo_creations.utils.swing.dialog.AbstractDialog;
+import net.darmo_creations.utils.swing.dialog.DefaultDialogController;
 
 /**
  * @author Damien Vergnet
  */
-public class AboutDialog extends AbstractDialog implements ActionListener {
-  private static final long serialVersionUID = -2364155320780319844L;
+public class AboutDialog extends AbstractDialog {
+  private static final long serialVersionUID = -3498448631589457797L;
 
-  private static final KeyStroke escapeStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-  public static final String dispatchWindowClosingActionMapKey = "WINDOW_CLOSING";
+  public AboutDialog(JFrame owner) {
+    super(owner, Mode.CLOSE_OPTION, false);
 
-  private String TEXT_1;
-  private String TEXT_2;
-  private String TEXT_3;
-  private final String TEXT_4 = ".";
-  private final String CC_TEXT = "Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)";
-  private final String CC_LINK = "http://creativecommons.org/licenses/by-nc-sa/4.0/";
-  private final String DC_TEXT = "darmo-creations.net";
-  private final String DC_LINK = "http://darmo-creations.net/show.php?id=2";
+    setTitle(I18n.getLocalizedString("dialog.about.title"));
 
-  public AboutDialog(Frame owner) {
-    super(owner, true);
+    JPanel leftPnl = new JPanel();
+    leftPnl.setBorder(new EmptyBorder(5, 5, 5, 5));
+    leftPnl.setLayout(new BoxLayout(leftPnl, BoxLayout.Y_AXIS));
+    ImageLabel icon = new ImageLabel(new ImageIcon(AboutDialog.class.getResource("/assets/icons/icon.png")), true);
+    icon.setPreferredSize(new Dimension(100, 100));
+    leftPnl.add(icon);
+    leftPnl.add(new JLabel(new ImageIcon(AboutDialog.class.getResource("/assets/icons/gplv3-127x51.png"))));
+    add(leftPnl, BorderLayout.WEST);
 
-    setSize(new Dimension(360, 180));
-    setLocationRelativeTo(owner);
-    setResizable(false);
-
-    try {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    }
-    catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {}
-
-    this.title = new JLabel();
-    this.title.setFont(this.title.getFont().deriveFont(20F));
-
-    this.titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    this.titlePanel.add(this.title);
-
-    this.license = new JEditorPane();
-    this.license.setOpaque(false);
-    this.license.setEditable(false);
-    this.license.setBorder(new EmptyBorder(5, 5, 5, 5));
-    this.license.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
-
-    HTMLEditorKit kit = new HTMLEditorKit();
-    this.license.setEditorKit(kit);
-
-    StyleSheet styleSheet = kit.getStyleSheet();
-    styleSheet.addRule("body {font-family: Tahoma; font-size: 11px; text-align: justify;}");
-
-    this.license.addHyperlinkListener(new HyperlinkListener() {
-      @Override
-      public void hyperlinkUpdate(HyperlinkEvent e) {
-        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          if (Desktop.isDesktopSupported()) {
-            try {
-              Desktop.getDesktop().browse(e.getURL().toURI());
-            }
-            catch (IOException | URISyntaxException ex) {}
-          }
+    JEditorPane textPnl = new JEditorPane();
+    textPnl.setContentType("text/html");
+    textPnl.setEditable(false);
+    textPnl.setPreferredSize(new Dimension(600, 200));
+    textPnl.setDocument(getDocument(textPnl));
+    textPnl.addHyperlinkListener(e -> {
+      if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+        try {
+          Desktop.getDesktop().browse(new URI(e.getDescription()));
+        }
+        catch (IOException | URISyntaxException e1) {
+          e1.printStackTrace();
         }
       }
     });
+    textPnl.setText(getHtml());
+    add(new JScrollPane(textPnl), BorderLayout.CENTER);
 
-    this.infosPanel = new JPanel(new BorderLayout());
-    this.infosPanel.add(this.titlePanel, BorderLayout.NORTH);
-    this.infosPanel.add(this.license, BorderLayout.CENTER);
+    setActionListener(new DefaultDialogController<>(this));
 
-    this.closeBtn = new JButton();
-    this.closeBtn.setFont(MainFrame.font);
-    this.closeBtn.addActionListener(this);
-    this.closeBtn.setActionCommand("close");
-    this.closeBtn.setFocusPainted(false);
-
-    this.btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    this.btnPanel.add(this.closeBtn);
-
-    getContentPane().add(this.infosPanel, BorderLayout.CENTER);
-    getContentPane().add(this.btnPanel, BorderLayout.SOUTH);
-
-    installEscapeCloseOperation(this);
+    pack();
+    setLocationRelativeTo(owner);
   }
 
-  public static void installEscapeCloseOperation(final JDialog dialog) {
-    Action dispatchClosing = new AbstractAction() {
-      private static final long serialVersionUID = 817778022911581351L;
+  private String getHtml() {
+    try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/assets/about.html")))) {
+      String line;
+      StringJoiner sj = new StringJoiner("\n");
 
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING));
+      while ((line = br.readLine()) != null) {
+        sj.add(line);
       }
-    };
-    JRootPane root = dialog.getRootPane();
-    root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeStroke, dispatchWindowClosingActionMapKey);
-    root.getActionMap().put(dispatchWindowClosingActionMapKey, dispatchClosing);
-  }
 
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    switch (e.getActionCommand()) {
-      case "close":
-        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+      return sj.toString();
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+      return null;
     }
   }
 
-  public void setFieldsText(Locale locale) {
-    ResourceBundle msg = ResourceBundle.getBundle("net/darmo/resources/langs/lang", locale);
+  private Document getDocument(JEditorPane textPane) {
+    HTMLEditorKit kit = new HTMLEditorKit();
+    textPane.setEditorKit(kit);
 
-    setTitle(msg.getString("about_dialog.title"));
-    this.title.setText(msg.getString("title"));
-    this.closeBtn.setText(msg.getString("about_dialog.close"));
-    this.TEXT_1 = msg.getString("about_dialog.text1");
-    this.TEXT_2 = msg.getString("about_dialog.text2");
-    this.TEXT_3 = msg.getString("about_dialog.text3");
-    this.license.setText(this.TEXT_1 + toLink(this.CC_LINK, this.CC_TEXT) + this.TEXT_2 + "<br/>" + this.TEXT_3
-        + toLink(this.DC_LINK, this.DC_TEXT) + this.TEXT_4);
+    StyleSheet styleSheet = kit.getStyleSheet();
+    styleSheet.addRule("body {font-family: sans serif; margin: 4px; font-size: 10px}");
+    styleSheet.addRule("h2 {margin-top: 0;}");
+
+    return kit.createDefaultDocument();
   }
-
-  private String toLink(String url, String text) {
-    return "<a href='" + url + "'>" + (text != null ? text : url.substring(url.indexOf("//") + 2)) + "</a>";
-  }
-
-  private final JPanel infosPanel, titlePanel, btnPanel;
-  private final JButton closeBtn;
-  private final JEditorPane license;
-  private final JLabel title;
 }

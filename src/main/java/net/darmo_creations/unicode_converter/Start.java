@@ -25,6 +25,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import net.darmo_creations.utils.I18n;
+import net.darmo_creations.utils.version.Version;
 
 /**
  * Apllication's starting class.
@@ -32,6 +33,8 @@ import net.darmo_creations.utils.I18n;
  * @author Damien Vergnet
  */
 public class Start {
+  public static final Version CURRENT_VERSION = new Version(1, 0, 0, true);
+
   public static void main(String[] args) {
     Language language = ConfigDao.getInstance().load();
 

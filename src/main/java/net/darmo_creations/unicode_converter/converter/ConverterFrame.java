@@ -232,7 +232,7 @@ public class ConverterFrame extends JFrame implements KeyListener, ActionListene
 
     if (src == this.charField) {
       if (texts[0].length() == 1) {
-        this.decField.setText(Integer.toString(Util.charToInt(texts[0].charAt(0))));
+        this.decField.setText(Integer.toString((int) texts[0].charAt(0)));
         this.hexField.setText(Util.charToHex(texts[0].charAt(0)));
       }
       else {

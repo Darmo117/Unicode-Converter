@@ -30,16 +30,6 @@ import java.util.List;
  */
 public class Util {
   /**
-   * Returns the decimal Unicode value of the argument character.
-   * 
-   * @param c the character
-   * @return the Unicode value of the argument
-   */
-  public static int charToInt(char c) {
-    return c;
-  }
-
-  /**
    * Converts an hexadecimal value into decimal. If the argument is not in a valid hexadecimal
    * format, a <code>NumberFormatException</code> will be thrown. If the argument is
    * <code>null</code>, an <code>IllegalArgumentException</code> will be thrown.
@@ -72,7 +62,7 @@ public class Util {
    * @return the hexadecimal Unicode value of the argument
    */
   public static String charToHex(char c) {
-    return intToHex(charToInt(c));
+    return intToHex((int) c);
   }
 
   /**

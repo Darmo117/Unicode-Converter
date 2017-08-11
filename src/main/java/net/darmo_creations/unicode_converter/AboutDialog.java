@@ -50,10 +50,12 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
+import net.darmo_creations.utils.swing.dialog.AbstractDialog;
+
 /**
- * @author Darmo
+ * @author Damien Vergnet
  */
-public class AboutDialog extends JDialog implements ActionListener {
+public class AboutDialog extends AbstractDialog implements ActionListener {
   private static final long serialVersionUID = -2364155320780319844L;
 
   private static final KeyStroke escapeStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
@@ -117,7 +119,7 @@ public class AboutDialog extends JDialog implements ActionListener {
     this.infosPanel.add(this.license, BorderLayout.CENTER);
 
     this.closeBtn = new JButton();
-    this.closeBtn.setFont(ConverterFrame.font);
+    this.closeBtn.setFont(MainFrame.font);
     this.closeBtn.addActionListener(this);
     this.closeBtn.setActionCommand("close");
     this.closeBtn.setFocusPainted(false);

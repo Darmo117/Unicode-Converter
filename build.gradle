@@ -28,7 +28,7 @@ task createZip(type: Zip) {
   from '/'
   include 'LICENSE'
   from 'build/libs/'
-  include 'Unicode_Converter-' + version + '.jar'
+  include 'Unicode Converter-' + version + '.jar'
   archiveName 'Unicode_Converter-' + version + '.zip'
   destinationDir(file('/'))
 }
@@ -43,7 +43,7 @@ dependencies {
   // The production code uses the SLF4J logging API at compile time
   compile 'org.slf4j:slf4j-api:1.7.21'
   // Darmo Utils
-  compile files('libs/Darmo Utils-0.1d.jar')
+  compile files('libs/Darmo Utils-1.0.jar')
   // JUnit
   testCompile 'junit:junit:4.12'
 }

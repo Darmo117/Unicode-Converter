@@ -30,6 +30,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
 
@@ -52,7 +53,7 @@ public class MainFrame extends JFrame {
 
   public MainFrame(Language language) {
     setResizable(false);
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     setTitle(I18n.getLocalizedString("dialog.main_frame.title") + " (" + Start.CURRENT_VERSION + ")");
     setIconImage(new ImageIcon(MainFrame.class.getResource("/assets/icons/icon.png")).getImage());
 
@@ -61,6 +62,8 @@ public class MainFrame extends JFrame {
     this.aboutDialog = new AboutDialog(this);
 
     setJMenuBar(getMenuBar(language, controller));
+
+    addWindowListener(controller);
 
     this.characterFld = new JTextField(10);
     this.decimalCodeFld = new JTextField(10);
@@ -169,5 +172,13 @@ public class MainFrame extends JFrame {
 
   public void showAboutDialog() {
     this.aboutDialog.setVisible(true);
+  }
+
+  public int showConfirmDialog(String localizedString) {
+    return JOptionPane.showConfirmDialog(this, localizedString, I18n.getLocalizedString("popup.confirm.dialog"), JOptionPane.YES_NO_OPTION);
+  }
+
+  public void showErrorDialog(String localizedString) {
+    JOptionPane.showMessageDialog(this, localizedString, I18n.getLocalizedString("popup.error.text"), JOptionPane.ERROR_MESSAGE);
   }
 }

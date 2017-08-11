@@ -21,12 +21,26 @@ package net.darmo_creations.unicode_converter;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MainController extends KeyAdapter implements ActionListener {
+import javax.swing.JOptionPane;
+
+import net.darmo_creations.utils.I18n;
+import net.darmo_creations.utils.JarUtil;
+
+/**
+ * Application's main controller.
+ *
+ * @author Damien Vergnet
+ */
+public class MainController extends WindowAdapter implements ActionListener, KeyListener {
   private static final Pattern LANG_PATTERN = Pattern.compile("lang-(\\w+)");
 
   private MainFrame frame;
@@ -79,9 +93,38 @@ public class MainController extends KeyAdapter implements ActionListener {
     }
   }
 
+  @Override
+  public void windowClosing(WindowEvent e) {
+    exit();
+  }
+
   private void changeLanguage(Language desired) {
     if (desired != this.language) {
-      // TODO
+      int choice = this.frame.showConfirmDialog(I18n.getLocalizedString("popup.change_language.confirm.text"));
+
+      if (choice == JOptionPane.YES_OPTION) {
+        try {
+          this.language = desired;
+          exit();
+          JarUtil.restartApplication(".jar");
+        }
+        catch (IOException | URISyntaxException __) {
+          this.frame.showErrorDialog(I18n.getLocalizedString("popup.change_language.restart_error.text"));
+          System.exit(0);
+        }
+      }
+
     }
   }
+
+  private void exit() {
+    ConfigDao.getInstance().save(this.language);
+    this.frame.dispose();
+  }
+
+  @Override
+  public void keyTyped(KeyEvent e) {}
+
+  @Override
+  public void keyPressed(KeyEvent e) {}
 }

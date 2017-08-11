@@ -38,8 +38,9 @@ public class Start {
   public static void main(String[] args) {
     Language language = ConfigDao.getInstance().load();
 
+    System.out.println(language);
     try {
-      I18n.init("/assets/langs/", language.getLocale());
+      I18n.init(Start.class.getResourceAsStream("/assets/langs/" + language.getLocale() + ".lang"));
     }
     catch (IOException e) {
       JOptionPane.showMessageDialog(null, "Could not load lang file!", "Error", JOptionPane.ERROR_MESSAGE);

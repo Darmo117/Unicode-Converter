@@ -1,1 +1,21 @@
 dialog.main_frame.title=Unikodo Konvertilo
+dialog.about.title=Pri
+
+popup.laf_error.title=Eraro
+popup.laf_error.text=Ne povis sargi sistemon GUI. Uzante defaulta.
+popup.confirm.title=Konfirmi
+popup.error.title=Eraro
+popup.change_language.confirm.text=La programo devas reinici post lingvoŝanĝo. Ĉu vi volas daŭrigi?
+popup.change_language.restart_error.text=La programo ne povis reinici.
+
+menu.lang.text=Lingvo
+menu.lang.mnemonic=l
+menu.help.text=Helpo
+menu.help.mnemonic=h
+item.about.text=Pri
+
+label.character.text=Signo
+label.decimal_code.text=Dekuma kodo
+label.hexadecimal_code.text=Deksesuma kodo
+
+button.close.text=Fermi

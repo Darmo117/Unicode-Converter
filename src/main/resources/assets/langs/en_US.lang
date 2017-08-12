@@ -1,1 +1,21 @@
 dialog.main_frame.title=Unicode Converter
+dialog.about.title=About
+
+popup.laf_error.title=Error
+popup.laf_error.text=Could not load system look and feel, using default.
+popup.confirm.title=Confirm
+popup.error.title=Error
+popup.change_language.confirm.text=The application will restart after changing the language. Do you want to continue?
+popup.change_language.restart_error.text=Unable to restart the application.
+
+menu.lang.text=Language
+menu.lang.mnemonic=h
+menu.help.text=Help
+menu.help.mnemonic=h
+item.about.text=About
+
+label.character.text=Character
+label.decimal_code.text=Decimal code
+label.hexadecimal_code.text=Hexadecimal code
+
+button.close.text=Close

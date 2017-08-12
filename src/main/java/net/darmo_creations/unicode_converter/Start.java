@@ -38,7 +38,6 @@ public class Start {
   public static void main(String[] args) {
     Language language = ConfigDao.getInstance().load();
 
-    System.out.println(language);
     try {
       I18n.init(Start.class.getResourceAsStream("/assets/langs/" + language.getLocale() + ".lang"));
     }
@@ -51,7 +50,7 @@ public class Start {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     }
     catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-      JOptionPane.showMessageDialog(null, I18n.getLocalizedString("popup.laf_error.text"), I18n.getLocalizedString("popup.error.title"),
+      JOptionPane.showMessageDialog(null, I18n.getLocalizedString("popup.laf_error.text"), I18n.getLocalizedString("popup.laf_error.title"),
           JOptionPane.ERROR_MESSAGE);
     }
 

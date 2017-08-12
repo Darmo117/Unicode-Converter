@@ -1,1 +1,21 @@
 dialog.main_frame.title=Convertisseur Unicode
+dialog.about.title=À propos
+
+popup.laf_error.title=Erreur
+popup.laf_error.text=Impossible de charger le rendu système, utilisation du rendu par défaut.
+popup.confirm.title=Confirmer
+popup.error.title=Erreur
+popup.change_language.confirm.text=L'application va devoir redémarrer après changement de la langue. Voulez-vous continuer?
+popup.change_language.restart_error.text=Impossible de redémarrer l'application.
+
+menu.lang.text=Langue
+menu.lang.mnemonic=l
+menu.help.text=Aide
+menu.help.mnemonic=a
+item.about.text=À propos
+
+label.character.text=Caractère
+label.decimal_code.text=Code décimal
+label.hexadecimal_code.text=Code hexadécimal
+
+button.close.text=Fermer

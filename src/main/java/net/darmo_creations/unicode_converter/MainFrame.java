@@ -149,7 +149,7 @@ public class MainFrame extends JFrame {
 
   public Optional<Character> getCharacter() {
     String text = this.characterFld.getText();
-    return text.length() > 0 ? Optional.of(text.charAt(0)) : Optional.empty();
+    return text.length() == 1 ? Optional.of(text.charAt(0)) : Optional.empty();
   }
 
   public void setCharacter(Optional<Character> c) {
@@ -193,10 +193,10 @@ public class MainFrame extends JFrame {
   }
 
   public int showConfirmDialog(String localizedString) {
-    return JOptionPane.showConfirmDialog(this, localizedString, I18n.getLocalizedString("popup.confirm.dialog"), JOptionPane.YES_NO_OPTION);
+    return JOptionPane.showConfirmDialog(this, localizedString, I18n.getLocalizedString("popup.confirm.title"), JOptionPane.YES_NO_OPTION);
   }
 
   public void showErrorDialog(String localizedString) {
-    JOptionPane.showMessageDialog(this, localizedString, I18n.getLocalizedString("popup.error.text"), JOptionPane.ERROR_MESSAGE);
+    JOptionPane.showMessageDialog(this, localizedString, I18n.getLocalizedString("popup.error.title"), JOptionPane.ERROR_MESSAGE);
   }
 }

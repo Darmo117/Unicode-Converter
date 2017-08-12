@@ -33,7 +33,7 @@ import net.darmo_creations.utils.version.Version;
  * @author Damien Vergnet
  */
 public class Start {
-  public static final Version CURRENT_VERSION = new Version(1, 0, 0, false);
+  public static final Version CURRENT_VERSION = new Version(1, 0, 1, false);
 
   public static void main(String[] args) {
     Language language = ConfigDao.getInstance().load();

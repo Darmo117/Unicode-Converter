@@ -27,6 +27,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,22 +71,22 @@ public class MainController extends WindowAdapter implements ActionListener, Key
 
     switch (name) {
       case MainFrame.CHARACTER_FLD_NAME:
-        char c = this.frame.getCharacter();
-        this.frame.setDecimalCode(c);
-        this.frame.setHexadecimalCode(Integer.toHexString(c));
+        Optional<Character> c = this.frame.getCharacter();
+        this.frame.setDecimalCode(c.isPresent() ? Optional.of((int) c.get()) : Optional.empty());
+        this.frame.setHexadecimalCode(c.isPresent() ? Integer.toHexString(c.get()) : "");
         break;
       case MainFrame.DECIMAL_CODE_FLD_NAME:
         try {
-          int i = Integer.parseInt(this.frame.getDecimalCode());
-          this.frame.setCharacter((char) i);
-          this.frame.setHexadecimalCode(Integer.toHexString(i));
+          Optional<Integer> i = this.frame.getDecimalCode();
+          this.frame.setCharacter(i.isPresent() ? Optional.of((char) (int) i.get()) : Optional.empty());
+          this.frame.setHexadecimalCode(i.isPresent() ? Integer.toHexString(i.get()) : "");
         }
         catch (NumberFormatException ex) {}
         break;
       case MainFrame.HEXA_CODE_FLD_NAME:
         try {
-          int i = Integer.parseInt(this.frame.getHexadecimalCode(), 16);
-          this.frame.setCharacter((char) i);
+          Optional<Integer> i = this.frame.getHexadecimalCodeAsInt();
+          this.frame.setCharacter(i.isPresent() ? Optional.of((char) (int) i.get()) : Optional.empty());
           this.frame.setDecimalCode(i);
         }
         catch (NumberFormatException ex) {}

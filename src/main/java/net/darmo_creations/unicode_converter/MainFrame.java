@@ -22,6 +22,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.util.Optional;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -146,24 +147,41 @@ public class MainFrame extends JFrame {
     return menuBar;
   }
 
-  public char getCharacter() {
-    return this.characterFld.getText().charAt(0);
+  public Optional<Character> getCharacter() {
+    String text = this.characterFld.getText();
+    return text.length() > 0 ? Optional.of(text.charAt(0)) : Optional.empty();
   }
 
-  public void setCharacter(char c) {
-    this.characterFld.setText("" + c);
+  public void setCharacter(Optional<Character> c) {
+    if (c.isPresent())
+      this.characterFld.setText("" + c.get());
+    else
+      this.characterFld.setText(null);
   }
 
-  public String getDecimalCode() {
-    return this.decimalCodeFld.getText();
+  public Optional<Integer> getDecimalCode() {
+    try {
+      return Optional.of(Integer.parseInt(this.decimalCodeFld.getText()));
+    }
+    catch (NumberFormatException ex) {
+      return Optional.empty();
+    }
   }
 
-  public void setDecimalCode(int i) {
-    this.decimalCodeFld.setText("" + i);
+  public void setDecimalCode(Optional<Integer> i) {
+    if (i.isPresent())
+      this.decimalCodeFld.setText("" + i.get());
+    else
+      this.decimalCodeFld.setText("");
   }
 
-  public String getHexadecimalCode() {
-    return this.hexaCodeFld.getText();
+  public Optional<Integer> getHexadecimalCodeAsInt() {
+    try {
+      return Optional.of(Integer.parseInt(this.hexaCodeFld.getText().toUpperCase(), 16));
+    }
+    catch (NumberFormatException ex) {
+      return Optional.empty();
+    }
   }
 
   public void setHexadecimalCode(String hex) {

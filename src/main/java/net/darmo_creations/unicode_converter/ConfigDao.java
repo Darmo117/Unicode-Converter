@@ -20,6 +20,8 @@ package net.darmo_creations.unicode_converter;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -68,11 +70,11 @@ public class ConfigDao {
       doc.appendChild(root);
 
       Transformer transformer = TransformerFactory.newInstance().newTransformer();
-      StreamResult result = new StreamResult(new File(JarUtil.getJarDir() + "config.xml"));
+      StreamResult result = new StreamResult(new File(URLDecoder.decode(JarUtil.getJarDir(), "UTF-8") + "config.xml"));
 
       transformer.transform(new DOMSource(doc), result);
     }
-    catch (ParserConfigurationException | TransformerException e) {}
+    catch (ParserConfigurationException | TransformerException | UnsupportedEncodingException e) {}
   }
 
   /**
@@ -82,7 +84,7 @@ public class ConfigDao {
    */
   public Language load() {
     try {
-      File fXmlFile = new File(JarUtil.getJarDir() + "config.xml");
+      File fXmlFile = new File(URLDecoder.decode(JarUtil.getJarDir(), "UTF-8") + "config.xml");
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
       Document doc = dBuilder.parse(fXmlFile);

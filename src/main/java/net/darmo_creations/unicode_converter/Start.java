@@ -18,42 +18,27 @@
  */
 package net.darmo_creations.unicode_converter;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
-import net.darmo_creations.utils.I18n;
-import net.darmo_creations.utils.version.Version;
+import net.darmo_creations.gui_framework.ApplicationRegistry;
+import net.darmo_creations.gui_framework.config.Language;
 
 /**
- * Apllication's starting class.
+ * Application's starting class.
  *
  * @author Damien Vergnet
  */
 public class Start {
-  public static final Version CURRENT_VERSION = new Version(1, 0, 1, false);
-
   public static void main(String[] args) {
-    Language language = ConfigDao.getInstance().load();
+    List<Language> l = new ArrayList<>();
+    l.add(new Language("English", Locale.US));
+    l.add(new Language("Français", Locale.FRANCE));
+    l.add(new Language("Esperanto", new Locale("eo")));
 
-    try {
-      I18n.init(Start.class.getResourceAsStream("/assets/langs/" + language.getLocale() + ".lang"));
-    }
-    catch (IOException e) {
-      JOptionPane.showMessageDialog(null, "Could not load lang file!", "Error", JOptionPane.ERROR_MESSAGE);
-      return;
-    }
-
-    try {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    }
-    catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-      JOptionPane.showMessageDialog(null, I18n.getLocalizedString("popup.laf_error.text"), I18n.getLocalizedString("popup.laf_error.title"),
-          JOptionPane.ERROR_MESSAGE);
-    }
-
-    new MainFrame(language).setVisible(true);
+    ApplicationRegistry.setLanguages(l);
+    ApplicationRegistry.registerApplication(new UnicodeConverter());
+    net.darmo_creations.gui_framework.Start.run();
   }
 }

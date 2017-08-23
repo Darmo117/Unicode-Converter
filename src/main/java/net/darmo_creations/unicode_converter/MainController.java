@@ -19,108 +19,51 @@
 package net.darmo_creations.unicode_converter;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import javax.swing.JOptionPane;
-
-import net.darmo_creations.utils.I18n;
-import net.darmo_creations.utils.JarUtil;
+import net.darmo_creations.gui_framework.config.WritableConfig;
+import net.darmo_creations.gui_framework.controllers.ApplicationController;
 
 /**
  * Application's main controller.
  *
  * @author Damien Vergnet
  */
-public class MainController extends WindowAdapter implements ActionListener, KeyListener {
-  private static final Pattern LANG_PATTERN = Pattern.compile("lang-(\\w+)");
-
-  private MainFrame frame;
-  private Language language;
-
-  public MainController(MainFrame frame, Language language) {
-    this.frame = frame;
-    this.language = language;
-  }
-
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    String cmd = e.getActionCommand();
-    Matcher m = LANG_PATTERN.matcher(cmd);
-
-    if ("about".equals(cmd)) {
-      this.frame.showAboutDialog();
-    }
-    else if (m.matches()) {
-      changeLanguage(Language.fromCode(m.group(1)));
-    }
+public class MainController extends ApplicationController implements KeyListener {
+  public MainController(MainFrame frame, WritableConfig config) {
+    super(frame, config);
   }
 
   @Override
   public void keyReleased(KeyEvent e) {
     String name = ((Component) e.getSource()).getName();
+    MainFrame frame = (MainFrame) this.frame;
 
     switch (name) {
       case MainFrame.CHARACTER_FLD_NAME:
-        Optional<Character> c = this.frame.getCharacter();
-        this.frame.setDecimalCode(c.isPresent() ? Optional.of((int) c.get()) : Optional.empty());
-        this.frame.setHexadecimalCode(c.isPresent() ? Integer.toHexString(c.get()) : "");
+        Optional<Character> c = frame.getCharacter();
+        frame.setDecimalCode(c.isPresent() ? Optional.of((int) c.get()) : Optional.empty());
+        frame.setHexadecimalCode(c.isPresent() ? Integer.toHexString(c.get()) : "");
         break;
       case MainFrame.DECIMAL_CODE_FLD_NAME:
         try {
-          Optional<Integer> i = this.frame.getDecimalCode();
-          this.frame.setCharacter(i.isPresent() ? Optional.of((char) (int) i.get()) : Optional.empty());
-          this.frame.setHexadecimalCode(i.isPresent() ? Integer.toHexString(i.get()) : "");
+          Optional<Integer> i = frame.getDecimalCode();
+          frame.setCharacter(i.isPresent() ? Optional.of((char) (int) i.get()) : Optional.empty());
+          frame.setHexadecimalCode(i.isPresent() ? Integer.toHexString(i.get()) : "");
         }
         catch (NumberFormatException ex) {}
         break;
       case MainFrame.HEXA_CODE_FLD_NAME:
         try {
-          Optional<Integer> i = this.frame.getHexadecimalCodeAsInt();
-          this.frame.setCharacter(i.isPresent() ? Optional.of((char) (int) i.get()) : Optional.empty());
-          this.frame.setDecimalCode(i);
+          Optional<Integer> i = frame.getHexadecimalCodeAsInt();
+          frame.setCharacter(i.isPresent() ? Optional.of((char) (int) i.get()) : Optional.empty());
+          frame.setDecimalCode(i);
         }
         catch (NumberFormatException ex) {}
         break;
     }
-  }
-
-  @Override
-  public void windowClosing(WindowEvent e) {
-    exit();
-  }
-
-  private void changeLanguage(Language desired) {
-    if (desired != this.language) {
-      int choice = this.frame.showConfirmDialog(I18n.getLocalizedString("popup.change_language.confirm.text"));
-
-      if (choice == JOptionPane.YES_OPTION) {
-        try {
-          this.language = desired;
-          exit();
-          JarUtil.restartApplication(".jar");
-        }
-        catch (IOException | URISyntaxException __) {
-          this.frame.showErrorDialog(I18n.getLocalizedString("popup.change_language.restart_error.text"));
-          System.exit(0);
-        }
-      }
-
-    }
-  }
-
-  private void exit() {
-    ConfigDao.getInstance().save(this.language);
-    this.frame.dispose();
   }
 
   @Override

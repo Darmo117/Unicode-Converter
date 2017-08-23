@@ -18,5 +18,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/Unicode%20Converter/libs/doc.zip!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="libs/GUI-Framework-1.0.jar" sourcepath="/GUI-Framework/src/main/java"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

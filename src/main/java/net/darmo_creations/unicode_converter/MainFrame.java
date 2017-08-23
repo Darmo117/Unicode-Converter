@@ -18,23 +18,20 @@
  */
 package net.darmo_creations.unicode_converter;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionListener;
 import java.util.Optional;
 
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import net.darmo_creations.gui_framework.config.WritableConfig;
+import net.darmo_creations.gui_framework.controllers.ApplicationController;
+import net.darmo_creations.gui_framework.gui.ApplicationFrame;
 import net.darmo_creations.utils.I18n;
 
 /**
@@ -42,109 +39,80 @@ import net.darmo_creations.utils.I18n;
  * 
  * @author Damien Vergnet
  */
-public class MainFrame extends JFrame {
+public class MainFrame extends ApplicationFrame {
   private static final long serialVersionUID = 3742949793870868995L;
 
   public static final String CHARACTER_FLD_NAME = "character-field";
   public static final String DECIMAL_CODE_FLD_NAME = "decimal-code-field";
   public static final String HEXA_CODE_FLD_NAME = "hexa-code-field";
 
-  private AboutDialog aboutDialog;
-  private final JTextField characterFld, decimalCodeFld, hexaCodeFld;
+  private JTextField characterFld, decimalCodeFld, hexaCodeFld;
 
-  public MainFrame(Language language) {
-    setResizable(false);
-    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-    setTitle(I18n.getLocalizedString("dialog.main_frame.title") + " (" + Start.CURRENT_VERSION + ")");
-    setIconImage(new ImageIcon(MainFrame.class.getResource("/assets/icons/icon.png")).getImage());
+  public MainFrame(WritableConfig config) {
+    super(config, true, false, true, false, new Dimension(300, 150), false);
+  }
 
-    MainController controller = new MainController(this, language);
+  @Override
+  protected ApplicationController preInit(WritableConfig config) {
+    return new MainController(this, config);
+  }
 
-    this.aboutDialog = new AboutDialog(this);
+  @Override
+  protected void initContent(ApplicationController controller, WritableConfig config) {
+    MainController c = (MainController) controller;
 
-    setJMenuBar(getMenuBar(language, controller));
-
-    addWindowListener(controller);
-
-    this.characterFld = new JTextField(10);
-    this.decimalCodeFld = new JTextField(10);
-    this.hexaCodeFld = new JTextField(10);
+    this.characterFld = new JTextField(15);
+    this.decimalCodeFld = new JTextField(15);
+    this.hexaCodeFld = new JTextField(15);
 
     this.characterFld.setName(CHARACTER_FLD_NAME);
-    this.characterFld.addKeyListener(controller);
+    this.characterFld.addKeyListener(c);
     this.decimalCodeFld.setName(DECIMAL_CODE_FLD_NAME);
-    this.decimalCodeFld.addKeyListener(controller);
+    this.decimalCodeFld.addKeyListener(c);
     this.hexaCodeFld.setName(HEXA_CODE_FLD_NAME);
-    this.hexaCodeFld.addKeyListener(controller);
+    this.hexaCodeFld.addKeyListener(c);
 
-    setLayout(new GridBagLayout());
+    JPanel content = getContentPanel();
+
+    content.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
 
     gbc.anchor = GridBagConstraints.BASELINE_LEADING;
     gbc.insets.left = 10;
-    add(new JLabel(I18n.getLocalizedString("label.character.text")), gbc);
+    content.add(new JLabel(I18n.getLocalizedString("label.character.text")), gbc);
 
     gbc.gridx = 1;
     gbc.gridwidth = GridBagConstraints.REMAINDER;
     gbc.anchor = GridBagConstraints.BASELINE;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.insets = new Insets(5, 10, 0, 10);
-    add(this.characterFld, gbc);
+    content.add(this.characterFld, gbc);
 
     gbc.gridx = 0;
     gbc.gridy = 1;
     gbc.gridwidth = 1;
     gbc.anchor = GridBagConstraints.BASELINE_LEADING;
     gbc.insets.left = 10;
-    add(new JLabel(I18n.getLocalizedString("label.decimal_code.text")), gbc);
+    content.add(new JLabel(I18n.getLocalizedString("label.decimal_code.text")), gbc);
 
     gbc.gridx = 1;
     gbc.gridwidth = GridBagConstraints.REMAINDER;
     gbc.anchor = GridBagConstraints.BASELINE;
     gbc.insets = new Insets(5, 10, 0, 10);
-    add(this.decimalCodeFld, gbc);
+    content.add(this.decimalCodeFld, gbc);
 
     gbc.gridx = 0;
     gbc.gridy = 2;
     gbc.gridwidth = 1;
     gbc.anchor = GridBagConstraints.BASELINE_LEADING;
     gbc.insets.left = 10;
-    add(new JLabel(I18n.getLocalizedString("label.hexadecimal_code.text")), gbc);
+    content.add(new JLabel(I18n.getLocalizedString("label.hexadecimal_code.text")), gbc);
 
     gbc.gridx = 1;
     gbc.gridwidth = GridBagConstraints.REMAINDER;
     gbc.anchor = GridBagConstraints.BASELINE;
     gbc.insets = new Insets(5, 10, 5, 10);
-    add(this.hexaCodeFld, gbc);
-
-    pack();
-    setLocationRelativeTo(null);
-  }
-
-  private JMenuBar getMenuBar(Language language, ActionListener actionListener) {
-    JMenuBar menuBar = new JMenuBar();
-
-    JMenu langMenu = new JMenu(I18n.getLocalizedString("menu.lang.text"));
-    langMenu.setMnemonic(I18n.getLocalizedMnemonic("menu.lang"));
-    JMenuItem i;
-    ButtonGroup group = new ButtonGroup();
-    for (Language l : Language.values()) {
-      langMenu.add(i = new JRadioButtonMenuItem(l.getName()));
-      i.setActionCommand("lang-" + l.getCode());
-      i.addActionListener(actionListener);
-      i.setSelected(l == language);
-      group.add(i);
-    }
-    menuBar.add(langMenu);
-
-    JMenu helpMenu = new JMenu(I18n.getLocalizedString("menu.help.text"));
-    helpMenu.setMnemonic(I18n.getLocalizedMnemonic("menu.help"));
-    helpMenu.add(i = new JMenuItem(I18n.getLocalizedString("item.about.text")));
-    i.addActionListener(actionListener);
-    i.setActionCommand("about");
-    menuBar.add(helpMenu);
-
-    return menuBar;
+    content.add(this.hexaCodeFld, gbc);
   }
 
   public Optional<Character> getCharacter() {
@@ -188,14 +156,12 @@ public class MainFrame extends JFrame {
     this.hexaCodeFld.setText(hex);
   }
 
-  public void showAboutDialog() {
-    this.aboutDialog.setVisible(true);
-  }
-
+  @Override
   public int showConfirmDialog(String localizedString) {
     return JOptionPane.showConfirmDialog(this, localizedString, I18n.getLocalizedString("popup.confirm.title"), JOptionPane.YES_NO_OPTION);
   }
 
+  @Override
   public void showErrorDialog(String localizedString) {
     JOptionPane.showMessageDialog(this, localizedString, I18n.getLocalizedString("popup.error.title"), JOptionPane.ERROR_MESSAGE);
   }

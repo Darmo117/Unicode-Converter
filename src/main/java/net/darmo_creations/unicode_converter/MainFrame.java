@@ -30,7 +30,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import net.darmo_creations.gui_framework.config.WritableConfig;
-import net.darmo_creations.gui_framework.controllers.ApplicationController;
 import net.darmo_creations.gui_framework.gui.ApplicationFrame;
 import net.darmo_creations.utils.I18n;
 
@@ -39,7 +38,7 @@ import net.darmo_creations.utils.I18n;
  * 
  * @author Damien Vergnet
  */
-public class MainFrame extends ApplicationFrame {
+public class MainFrame extends ApplicationFrame<MainController> {
   private static final long serialVersionUID = 3742949793870868995L;
 
   public static final String CHARACTER_FLD_NAME = "character-field";
@@ -53,24 +52,22 @@ public class MainFrame extends ApplicationFrame {
   }
 
   @Override
-  protected ApplicationController preInit(WritableConfig config) {
+  protected MainController preInit(WritableConfig config) {
     return new MainController(this, config);
   }
 
   @Override
-  protected void initContent(ApplicationController controller, WritableConfig config) {
-    MainController c = (MainController) controller;
-
+  protected void initContent(MainController controller, WritableConfig config) {
     this.characterFld = new JTextField(15);
     this.decimalCodeFld = new JTextField(15);
     this.hexaCodeFld = new JTextField(15);
 
     this.characterFld.setName(CHARACTER_FLD_NAME);
-    this.characterFld.addKeyListener(c);
+    this.characterFld.addKeyListener(controller);
     this.decimalCodeFld.setName(DECIMAL_CODE_FLD_NAME);
-    this.decimalCodeFld.addKeyListener(c);
+    this.decimalCodeFld.addKeyListener(controller);
     this.hexaCodeFld.setName(HEXA_CODE_FLD_NAME);
-    this.hexaCodeFld.addKeyListener(c);
+    this.hexaCodeFld.addKeyListener(controller);
 
     JPanel content = getContentPanel();
 

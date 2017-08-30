@@ -24,7 +24,6 @@ import java.util.Optional;
 import net.darmo_creations.gui_framework.Application;
 import net.darmo_creations.gui_framework.config.Language;
 import net.darmo_creations.gui_framework.config.WritableConfig;
-import net.darmo_creations.gui_framework.gui.ApplicationFrame;
 import net.darmo_creations.utils.version.Version;
 
 public class UnicodeConverter implements Application {
@@ -39,6 +38,9 @@ public class UnicodeConverter implements Application {
   public Version getCurrentVersion() {
     return CURRENT_VERSION;
   }
+
+  @Override
+  public void preInit() {}
 
   @Override
   public Optional<String> getIcon() {
@@ -56,7 +58,7 @@ public class UnicodeConverter implements Application {
   }
 
   @Override
-  public ApplicationFrame initFrame(WritableConfig config) {
+  public MainFrame initFrame(WritableConfig config) {
     return new MainFrame(config);
   }
 

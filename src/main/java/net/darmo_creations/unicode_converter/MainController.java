@@ -31,7 +31,7 @@ import net.darmo_creations.gui_framework.controllers.ApplicationController;
  *
  * @author Damien Vergnet
  */
-public class MainController extends ApplicationController implements KeyListener {
+public class MainController extends ApplicationController<MainFrame> implements KeyListener {
   public MainController(MainFrame frame, WritableConfig config) {
     super(frame, config);
   }
